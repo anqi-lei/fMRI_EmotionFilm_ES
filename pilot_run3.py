@@ -130,6 +130,7 @@ def run_experiment():
             timer = core.Clock()
             
             if experiment_info['Environment'] == 'mri':
+                
                 mri_start_time = event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
                 mri_start_time = mri_start_time + event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
                 

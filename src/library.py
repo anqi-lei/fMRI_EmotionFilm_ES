@@ -287,7 +287,7 @@ class Display_Video(object):
         self.window = window
         self.display = visual.MovieStim(self.window, filename=filename,
                 size=[size_x, size_y],
-                pos=[pos_x, pos_y], loop = False, noAudio = True 
+                pos=[pos_x, pos_y], loop = False, noAudio = False
                 ) #object to display instructions
         self.show_now = show_now
 
