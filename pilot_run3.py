@@ -13,7 +13,7 @@ from src.library import *
 INFO = {
     'Experiment': 'Emotion-Film Watching',  # compulsory: name of program, used for trial definition in ./parameter/~.csv
     'Subject': '001',  # compulsory
-    'Version': ['TEST', 'REAL'],  # no counterbalancing the 2 film orders
+    'Version': ['REAL','TEST'],  # no counterbalancing the 2 film orders
     'Run': ['1', '2'], # 2 sets of parameters for 2 runs / participant
     'Subtask': ['Exp'],  # start the task with block for choice from two colors or letter
     'Environment': ['lab', 'mri'],  # mri version can be tested on a normal stimuli delivery pc
@@ -104,7 +104,7 @@ def run_experiment():
     # Running the experiment
     ##########################################
     for trialcount in range(len(trials)):
-        if (trials[trialcount]['Stim_Cond'] == 'INSTR'):
+        if (trials[trialcount]['Stim_Cond'] == 'INSTR'): # anqi modified, Apr.15
             ##########################################
             # Set & display instructions
             ##########################################
@@ -133,6 +133,7 @@ def run_experiment():
                 
                 mri_start_time = event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
                 mri_start_time = mri_start_time + event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
+                event.waitKeys(keyList=['g'])
                 
         else:
             # update trial_output with trial-specific info

@@ -61,8 +61,8 @@ BASE = {
 LAB = {
     'env': 'lab',  # Enviroment name
     #'window_size': 'full_screen', # changed by anqi to avoid entering full screen, feb28
-    'window_size': (1280, 720),
-    #'window_size': (1920, 1080),
+    #'window_size': (1280, 720),
+    'window_size': (1920, 1080),
     #'window_size': (1440, 900), # for my macbook
     'input_method': 'keyboard'
     }
@@ -78,27 +78,27 @@ MRI = {
 # experiment specific vesion related setting
 VER_TEST = {
         'txt_color': 'black',
-        'rec_keys': ['b', 'y'],
-        'rec_keyans': ['Yes', 'No'],
+        'rec_keys': ['left', 'right' ,'return'],
+        'rec_keyans':['left', 'right' ,'return'],
         }
         
 # experiment specific vesion related setting
 VER_REAL = {
         'txt_color': 'black',
-        'rec_keys': ['b', 'y'],
-        'rec_keyans': ['Yes', 'No'],
+        'rec_keys': ['left', 'right' ,'return'],
+        'rec_keyans': ['left', 'right' ,'return'],
         }
 
 VER_TEST_MRI = {
-            'rec_keys': ['b', 'y'],  
-            'rec_keyans': ['Yes', 'No'],
-            #'loc_keys': ['6', '7']
+            'rec_keys': ['b', 'y', 'g'],  
+            'rec_keyans': ['left', 'right', 'return'],
+            'loc_keys': ['1', '2', '3'],
             }
             
 VER_REAL_MRI = {
-            'rec_keys': ['b', 'y'],
-            'rec_keyans': ['Yes', 'No'],
-            #'loc_keys': ['6', '7']
+            'rec_keys': ['b', 'y', 'g'],
+            'rec_keyans': ['left', 'right', 'return'],
+            'loc_keys': ['1', '2', '3'],
             }
 
 sans = ['Arial','Gill Sans MT', 'Helvetica','Verdana'] #use the first font found on this list
@@ -422,10 +422,10 @@ class my_instructions(object):
             if i==0 and self.parseflag == 1:
                 core.wait(uniform(1.3,1.75))
             elif self.env == 'mri':
-                #event.waitKeys(keyList=['1', '2', '3', '4', 't'])#
-                 #event.waitKeys(keyList=['e', 'b', 'y', 't'])#
-                event.waitKeys(keyList=['y'])
-                
+                #event.waitKeys(keyList='t')#
+                event.waitKeys(keyList=[ '1', '2', '3', 't'])#
+                #event.waitKeys(keyList=['y'])
+                #event.waitKeys(keyList='g')
             elif auto_advance_time is not None:
                 core.wait(auto_advance_time)
             else:
@@ -565,12 +565,14 @@ class stimulus_ExpSample(object):
         '''split questions into two sets'''
         self.q_focus = features[0:1]  # the focus question stays at the top
         self.q_others = features[1:17]
-        self.q_emotion = features[17:]
+        self.q_emotion = features[17:21]
+        self.q_arousal = features[22:]
 
     def generate(self):
         '''yield self.stimuli'''
         shuffle(self.q_others)
-        return self.q_focus + self.q_others + self.q_emotion
+        shuffle(self.q_emotion)
+        return self.q_focus + self.q_others + self.q_emotion + self.q_arousal
 
 
 def load_trials(infile):
@@ -743,13 +745,13 @@ def run_interactive_slider(win, experiment_info, question_text, initial_rating=5
     continueRoutine = True
     while continueRoutine:
         if experiment_info['Environment'] == 'mri':
-           keys = kb.getKeys(['e', 'b', 'y'], waitRelease=False) # e: left blue, b: right blue, c: right yellow
+           keys = kb.getKeys(['b', 'y', 'g'], waitRelease=False) # b: right blue, c: right yellow, g: right green
            for key in keys:
-             if key.name == 'e':
+             if key.name == 'b':
                 rating = max(min_rating, rating - slider_granularity)
-             elif key.name == 'b':
-                rating = min(max_rating, rating + slider_granularity)
              elif key.name == 'y':
+                rating = min(max_rating, rating + slider_granularity)
+             elif key.name == 'g':
                 continueRoutine = False
         else: # LAB environment
             # Check keyboard input:
