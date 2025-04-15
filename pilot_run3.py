@@ -70,7 +70,7 @@ def run_experiment():
     # MRI related settings
     if experiment_info['Environment'] in ['mri']:
         dummy_vol = 0
-        tr = 2
+        tr = 2 # 1.5? CHANGE
         trigger_code = 't'
 
     ##########################################
