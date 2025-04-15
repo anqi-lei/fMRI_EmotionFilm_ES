@@ -129,8 +129,13 @@ def run_experiment():
             instructions_run.show()
             timer = core.Clock()
             
+             # 1/2023 - added for mri - log trigger_code before each trial (other than instructions)
             if experiment_info['Environment'] == 'mri':
-                
+                # the following is used if each trial is to be aligned with TR
+                # Experiment.window.flip()  # clear the window
+                #event.waitKeys(keyList=[trigger_code])
+                #trial_response['mri_tr_time'] = timer.getTime()
+                # the following is used if only need to log each TR
                 mri_start_time = event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
                 mri_start_time = mri_start_time + event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
                 event.waitKeys(keyList=['g'])
@@ -240,7 +245,8 @@ def run_experiment():
                         trial_response['stim_1_start_time'] = timer.getTime()
                         
                 mytime = cur_stim.show(timer)
-                
+               
+               # dded for mri - log trigger_code before end of trial
                 if experiment_info['Environment'] == 'mri':
                     trial_response['mri_tr_time'] = trial_response['mri_tr_time'] + event.getKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer)
                 
