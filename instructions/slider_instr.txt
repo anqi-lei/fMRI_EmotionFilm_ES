@@ -9,7 +9,7 @@ Please wait! Advancing to instructions...
 
 You will drag your cursor along a scale to rate your feeling.  
 
-The scale ranges from 0 (very negative) to 10 (very positive). 
+The scale ranges from 1 (very negative) to 10 (very positive). 
 
 
 
@@ -21,5 +21,5 @@ We will start with a short practice!
 
 
 
-Please continue when you are ready… 
+Please "Return" when you are ready… 
 
