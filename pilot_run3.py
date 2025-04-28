@@ -8,6 +8,8 @@ import random
 from psychopy import core, event, logging, visual, data
 from src.library import *
 
+# bind ESC to quitting immediately
+event.globalKeys.add(key='escape', func=core.quit)
 
 # get input for dictionary defining the environment & trials to run
 INFO = {
@@ -246,7 +248,7 @@ def run_experiment():
                         
                 mytime = cur_stim.show(timer)
                
-               # dded for mri - log trigger_code before end of trial
+               # added for mri - log trigger_code before end of trial
                 if experiment_info['Environment'] == 'mri':
                     trial_response['mri_tr_time'] = trial_response['mri_tr_time'] + event.getKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer)
                 

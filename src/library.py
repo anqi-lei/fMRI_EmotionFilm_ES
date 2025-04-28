@@ -35,7 +35,9 @@ instr_name = '_instr.txt' # filename (preceded by subtask name) for instructions
 
 begin_name = 'begin_instr.txt' # beginning text, 
 begin2_name = 'begin_instr2.txt' # beginning text for second run
-start_name = 'start_instr.txt' # beginning text for second run
+begin_slider_name = 'slider_instr.txt' # beginning text, 
+begin2_slider_name = 'slider_instr2.txt' # beginning text, 
+start_name = 'start_instr.txt' # beginning text for real run
 
 ready_name = 'wait_trigger.txt' # instruction: wait trigger screen
 exp_end_name = 'taskend_instr.txt' # instruction: wait trigger screen
@@ -62,8 +64,8 @@ LAB = {
     'env': 'lab',  # Enviroment name
     #'window_size': 'full_screen', # changed by anqi to avoid entering full screen, feb28
     #'window_size': (1280, 720),
-    'window_size': (1920, 1080),
-    #'window_size': (1440, 900), # for my macbook
+    #'window_size': (1920, 1080),
+    'window_size': (1440, 900), # for my macbook
     'input_method': 'keyboard'
     }
 
@@ -72,7 +74,7 @@ MRI = {
     #'window_size': 'full_screen',
     'window_size': (1280, 720),
     #'input_method': 'serial',
-    'input_method': 'keyboard', #serial or keyboard
+    'input_method': 'keyboard', #serial or keyboard? might CHANGE
 }
 
 # experiment specific vesion related setting
