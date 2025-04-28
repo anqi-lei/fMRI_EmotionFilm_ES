@@ -7,7 +7,7 @@ Please wait! Advancing to instructions...
 
 
 
-You will drag your mouse along a scale to rate your feeling.  
+You will drag your cursor along a scale to rate your feeling.  
 
 The scale ranges from 0 (very negative) to 10 (very positive). 
 
