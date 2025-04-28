@@ -72,7 +72,7 @@ def run_experiment():
     # MRI related settings
     if experiment_info['Environment'] in ['mri']:
         dummy_vol = 0
-        tr = 2 # 1.5? CHANGE
+        tr = 1.5 # 1.5? CHANGE
         trigger_code = 't'
 
     ##########################################
@@ -101,6 +101,9 @@ def run_experiment():
  
     # hide mouse cursor
     event.Mouse(visible=False)
+    
+    # get a global clock (anqi movied the position of clock - April)
+    timer = core.Clock()
 
     ##########################################
     # Running the experiment
@@ -129,7 +132,7 @@ def run_experiment():
                 instruction_color=instruction_parameter['inst_color'], parseflag=myparse)
             
             instructions_run.show()
-            timer = core.Clock()
+            
             
              # 1/2023 - added for mri - log trigger_code before each trial (other than instructions)
             if experiment_info['Environment'] == 'mri':

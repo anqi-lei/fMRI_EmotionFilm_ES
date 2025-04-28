@@ -62,20 +62,20 @@ BASE = {
 # Laboratory setting
 LAB = {
     'env': 'lab',  # Enviroment name
-    #'window_size': 'full_screen', # changed by anqi to avoid entering full screen, feb28
+    #'window_size': 'full_screen',
     #'window_size': (1280, 720),
     #'window_size': (1920, 1080),
     'window_size': (1440, 900), # for my macbook
-    'input_method': 'keyboard'
+    'input_method': 'keyboard',
     }
 
 MRI = {
     'env': 'mri',
-    #'window_size': 'full_screen',
-    'window_size': (1280, 720),
-    #'input_method': 'serial',
-    'input_method': 'keyboard', #serial or keyboard? might CHANGE
-}
+     #'window_size': (1920, 1080),
+    'window_size': (1440, 900),
+    'input_method': 'keyboard',
+        }
+
 
 # experiment specific vesion related setting
 VER_TEST = {
@@ -415,7 +415,7 @@ class my_instructions(object):
         if self.parseflag == 1:
             self.parse_inst()
             
-        kb = keyboard.Keyboard()  # Create a keyboard object for key polling
+        #kb = keyboard.Keyboard()  # Create a keyboard object for key polling
     
         for i, cur in enumerate(self.instruction_txt):
             self.display.setText(cur)
@@ -425,11 +425,11 @@ class my_instructions(object):
                 core.wait(uniform(1.3,1.75))
             elif self.env == 'mri':
                 #event.waitKeys(keyList='t')#
-                event.waitKeys(keyList=[ '1', '2', '3', 't'])#
+                event.waitKeys(keyList=[ '1', '2', '3', '4', 't'])#
                 #event.waitKeys(keyList=['y'])
                 #event.waitKeys(keyList='g')
-            elif auto_advance_time is not None:
-                core.wait(auto_advance_time)
+            #elif auto_advance_time is not None:
+             #   core.wait(auto_advance_time)
             else:
                 event.waitKeys(keyList=['return'])
 
