@@ -119,6 +119,7 @@ var thisIndex;
 var block_results;
 var showFeedback;
 var instructions;
+var key_resp_start;
 var rec;
 var start_button;
 var preBlockClock;
@@ -141,6 +142,7 @@ var text_3;
 var text_4;
 var key_resp;
 var rec_2;
+var start_2;
 var globalClock;
 var routineTimer;
 async function experimentInit() {
@@ -186,11 +188,13 @@ async function experimentInit() {
     depth: -2.0 
   });
   
+  key_resp_start = new core.Keyboard({psychoJS: psychoJS, clock: new util.Clock(), waitForStart: true});
+  
   rec = new visual.Rect ({
     win: psychoJS.window, name: 'rec', 
-    width: [0.5, 0.09][0], height: [0.5, 0.09][1],
+    width: [0.4, 0.08][0], height: [0.4, 0.08][1],
     ori: 0, 
-    pos: [0, (- 0.2)], 
+    pos: [0, (- 0.4)], 
     draggable: false, 
     anchor: 'center', 
     lineWidth: 5, 
@@ -198,7 +202,7 @@ async function experimentInit() {
     fillColor: new util.Color([0.2, 0.2, 0.2]), 
     colorSpace: 'rgb', 
     opacity: 1, 
-    depth: -3, 
+    depth: -4, 
     interpolate: true, 
   });
   
@@ -208,10 +212,10 @@ async function experimentInit() {
     text: 'Start',
     font: 'Arial',
     units: undefined, 
-    pos: [0, (- 0.2)], draggable: false, height: 0.08,  wrapWidth: 2, ori: 0,
+    pos: [0, (- 0.4)], draggable: false, height: 0.05,  wrapWidth: 0, ori: 0,
     languageStyle: 'LTR',
     color: new util.Color('white'),  opacity: 1,
-    depth: -4.0 
+    depth: -5.0 
   });
   
   // Initialize components for Routine "preBlock"
@@ -224,7 +228,7 @@ async function experimentInit() {
     text: '+',
     font: 'Arial',
     units: undefined, 
-    pos: [0, 0], draggable: false, height: 0.15,  wrapWidth: undefined, ori: 0,
+    pos: [0, 0], draggable: false, height: 0.15,  wrapWidth: 1.5, ori: 0,
     languageStyle: 'LTR',
     color: new util.Color('white'),  opacity: 1,
     depth: 0.0 
@@ -236,7 +240,7 @@ async function experimentInit() {
     text: '',
     font: 'Arial',
     units: undefined, 
-    pos: [0, 0], draggable: false, height: 0.15,  wrapWidth: 2, ori: 0,
+    pos: [0, 0], draggable: false, height: 0.1,  wrapWidth: 2, ori: 0,
     languageStyle: 'LTR',
     color: new util.Color('white'),  opacity: 1,
     depth: -2.0 
@@ -248,9 +252,9 @@ async function experimentInit() {
     win: psychoJS.window, name: 'button1', 
     edges: 72, size:buttonSize,
     ori: 0, 
-    pos: [((- buttonGap) + 0.1), (((- buttonOffset) + buttonGap) + 0.1)], 
+    pos: [(- buttonGap), (((- buttonOffset) + buttonGap) + 0.2)], 
     draggable: false, 
-    anchor: 'center', 
+    anchor: 'top-center', 
     lineWidth: 5, 
     lineColor: new util.Color([1, 1, 1]), 
     fillColor: new util.Color(colours[0][0]), 
@@ -264,9 +268,9 @@ async function experimentInit() {
     win: psychoJS.window, name: 'button2', 
     edges: 72, size:buttonSize,
     ori: 0, 
-    pos: [buttonGap, ((- buttonOffset) + buttonGap)], 
+    pos: [buttonGap, (((- buttonOffset) + buttonGap) + 0.2)], 
     draggable: false, 
-    anchor: 'center', 
+    anchor: 'top-center', 
     lineWidth: 5, 
     lineColor: new util.Color([1, 1, 1]), 
     fillColor: new util.Color(colours[1][0]), 
@@ -280,9 +284,9 @@ async function experimentInit() {
     win: psychoJS.window, name: 'button3', 
     edges: 72, size:buttonSize,
     ori: 0, 
-    pos: [(- buttonGap), ((- buttonOffset) - buttonGap)], 
+    pos: [(- buttonGap), (((- buttonOffset) - buttonGap) + 0.2)], 
     draggable: false, 
-    anchor: 'center', 
+    anchor: 'top-center', 
     lineWidth: 5, 
     lineColor: new util.Color([1, 1, 1]), 
     fillColor: new util.Color(colours[2][0]), 
@@ -296,9 +300,9 @@ async function experimentInit() {
     win: psychoJS.window, name: 'button4', 
     edges: 72, size:buttonSize,
     ori: 0, 
-    pos: [buttonGap, ((- buttonOffset) - buttonGap)], 
+    pos: [buttonGap, (((- buttonOffset) - buttonGap) + 0.2)], 
     draggable: false, 
-    anchor: 'center', 
+    anchor: 'top-center', 
     lineWidth: 5, 
     lineColor: new util.Color([1, 1, 1]), 
     fillColor: new util.Color(colours[3][0]), 
@@ -318,7 +322,7 @@ async function experimentInit() {
     ori : 0, 
     pos : [0, 0], 
     draggable: false,
-    size : [0.3, 0.3],
+    size : [0.2, 0.2],
     color : new util.Color([1, 1, 1]), opacity : 1.0,
     flipHoriz : false, flipVert : false,
     texRes : 128, interpolate : true, depth : 0.0 
@@ -327,9 +331,9 @@ async function experimentInit() {
     win: psychoJS.window, name: 'button1_2', 
     edges: 72, size:buttonSize,
     ori: 0, 
-    pos: [(- buttonGap), ((- buttonOffset) + buttonGap)], 
+    pos: [(- buttonGap), (((- buttonOffset) + buttonGap) + 0.2)], 
     draggable: false, 
-    anchor: 'center', 
+    anchor: 'top-center', 
     lineWidth: 5, 
     lineColor: new util.Color('white'), 
     fillColor: new util.Color(colours[0][0]), 
@@ -343,9 +347,9 @@ async function experimentInit() {
     win: psychoJS.window, name: 'button2_2', 
     edges: 72, size:buttonSize,
     ori: 0, 
-    pos: [buttonGap, ((- buttonOffset) + buttonGap)], 
+    pos: [buttonGap, (((- buttonOffset) + buttonGap) + 0.2)], 
     draggable: false, 
-    anchor: 'center', 
+    anchor: 'top-center', 
     lineWidth: 5, 
     lineColor: new util.Color('white'), 
     fillColor: new util.Color(colours[1][0]), 
@@ -359,9 +363,9 @@ async function experimentInit() {
     win: psychoJS.window, name: 'button3_2', 
     edges: 72, size:buttonSize,
     ori: 0, 
-    pos: [(- buttonGap), ((- buttonOffset) - buttonGap)], 
+    pos: [(- buttonGap), (((- buttonOffset) - buttonGap) + 0.2)], 
     draggable: false, 
-    anchor: 'center', 
+    anchor: 'top-center', 
     lineWidth: 5, 
     lineColor: new util.Color('white'), 
     fillColor: new util.Color(colours[2][0]), 
@@ -375,9 +379,9 @@ async function experimentInit() {
     win: psychoJS.window, name: 'button4_2', 
     edges: 72, size:buttonSize,
     ori: 0, 
-    pos: [buttonGap, ((- buttonOffset) - buttonGap)], 
+    pos: [buttonGap, (((- buttonOffset) - buttonGap) + 0.2)], 
     draggable: false, 
-    anchor: 'center', 
+    anchor: 'top-center', 
     lineWidth: 5, 
     lineColor: new util.Color('white'), 
     fillColor: new util.Color(colours[3][0]), 
@@ -407,7 +411,7 @@ async function experimentInit() {
     text: ' ',
     font: 'Arial',
     units: undefined, 
-    pos: [0, (- 0.45)], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0,
+    pos: [0, (- 0.2)], draggable: false, height: 0.05,  wrapWidth: undefined, ori: 0,
     languageStyle: 'LTR',
     color: new util.Color('white'),  opacity: 1,
     depth: -2.0 
@@ -419,7 +423,7 @@ async function experimentInit() {
     win: psychoJS.window, name: 'rec_2', 
     width: [0.5, 0.09][0], height: [0.5, 0.09][1],
     ori: 0, 
-    pos: [0, (- 0.45)], 
+    pos: [0, (- 0.4)], 
     draggable: false, 
     anchor: 'center', 
     lineWidth: 5, 
@@ -429,6 +433,18 @@ async function experimentInit() {
     opacity: 1, 
     depth: -4, 
     interpolate: true, 
+  });
+  
+  start_2 = new visual.TextStim({
+    win: psychoJS.window,
+    name: 'start_2',
+    text: 'Start',
+    font: 'Arial',
+    units: undefined, 
+    pos: [0, (- 0.4)], draggable: false, height: 0.05,  wrapWidth: 2.5, ori: 0,
+    languageStyle: 'LTR',
+    color: new util.Color('white'),  opacity: 1,
+    depth: -5.0 
   });
   
   // Create some handy timers
@@ -445,6 +461,7 @@ var continueRoutine;
 var startMaxDurationReached;
 var gotValidClick;
 var mouserec;
+var _key_resp_start_allKeys;
 var startMaxDuration;
 var startComponents;
 function startRoutineBegin(snapshot) {
@@ -463,14 +480,18 @@ function startRoutineBegin(snapshot) {
     gotValidClick = false; // until a click is received
     // Run 'Begin Routine' code from code
     mouserec = mouse.getPos();
-    instructions.text = "This experiment consists of a Stroop task.\n\nIn this task you will be presented with a series of words.\nEach screen will show a single word, these words will appear in different colours (green, yellow, blue and red).\nYour job is to indicate the colour that the word is printed in as quickly and as accurately as possible. \nClick the button on the screen that corresponds to that colour. \n\nTouch Start if you  understand the instructions and are ready to begin.";
+    instructions.text = "This experiment consists of a Stroop task.\n\nIn this task you will be presented with a series of words.\n\nEach screen will show a single word, these words will appear in different colours \n(green, yellow, blue and red).\n\nYour job is to indicate the colour that the word is printed in as quickly and as accurately as possible. \nMove your cursor to the option that corresponds to that colour. \n\n\nPress SPACE bar to start if you understand the instructions and are ready to begin.";
     
+    key_resp_start.keys = undefined;
+    key_resp_start.rt = undefined;
+    _key_resp_start_allKeys = [];
     psychoJS.experiment.addData('start.started', globalClock.getTime());
     startMaxDuration = null
     // keep track of which components have finished
     startComponents = [];
     startComponents.push(mouse);
     startComponents.push(instructions);
+    startComponents.push(key_resp_start);
     startComponents.push(rec);
     startComponents.push(start_button);
     
@@ -512,6 +533,30 @@ function startRoutineEachFrame() {
       instructions.frameNStart = frameN;  // exact frame index
       
       instructions.setAutoDraw(true);
+    }
+    
+    
+    // *key_resp_start* updates
+    if (t >= waitTime && key_resp_start.status === PsychoJS.Status.NOT_STARTED) {
+      // keep track of start time/frame for later
+      key_resp_start.tStart = t;  // (not accounting for frame time here)
+      key_resp_start.frameNStart = frameN;  // exact frame index
+      
+      // keyboard checking is just starting
+      psychoJS.window.callOnFlip(function() { key_resp_start.clock.reset(); });  // t=0 on next screen flip
+      psychoJS.window.callOnFlip(function() { key_resp_start.start(); }); // start on screen flip
+    }
+    
+    if (key_resp_start.status === PsychoJS.Status.STARTED) {
+      let theseKeys = key_resp_start.getKeys({keyList: ['space'], waitRelease: false});
+      _key_resp_start_allKeys = _key_resp_start_allKeys.concat(theseKeys);
+      if (_key_resp_start_allKeys.length > 0) {
+        key_resp_start.keys = _key_resp_start_allKeys[_key_resp_start_allKeys.length - 1].name;  // just the last key pressed
+        key_resp_start.rt = _key_resp_start_allKeys[_key_resp_start_allKeys.length - 1].rt;
+        key_resp_start.duration = _key_resp_start_allKeys[_key_resp_start_allKeys.length - 1].duration;
+        // a response ends the routine
+        continueRoutine = false;
+      }
     }
     
     
@@ -593,6 +638,7 @@ function startRoutineEnd(snapshot) {
         rec_2.setOpacity(0);
     }
     
+    key_resp_start.stop();
     // the Routine "start" was not non-slip safe, so reset the non-slip timer
     routineTimer.reset();
     
@@ -1354,6 +1400,7 @@ function postBlockRoutineBegin(snapshot) {
     postBlockComponents.push(text_4);
     postBlockComponents.push(key_resp);
     postBlockComponents.push(rec_2);
+    postBlockComponents.push(start_2);
     
     postBlockComponents.forEach( function(thisComponent) {
       if ('status' in thisComponent)
@@ -1444,6 +1491,16 @@ function postBlockRoutineEachFrame() {
       rec_2.frameNStart = frameN;  // exact frame index
       
       rec_2.setAutoDraw(true);
+    }
+    
+    
+    // *start_2* updates
+    if (t >= waitTime && start_2.status === PsychoJS.Status.NOT_STARTED) {
+      // keep track of start time/frame for later
+      start_2.tStart = t;  // (not accounting for frame time here)
+      start_2.frameNStart = frameN;  // exact frame index
+      
+      start_2.setAutoDraw(true);
     }
     
     // check for quit (typically the Esc key)

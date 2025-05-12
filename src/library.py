@@ -12,6 +12,7 @@ from psychopy import core, data, gui, visual, event, logging
 from pyglet.window import key
 from random import uniform, shuffle
 import numpy as np
+import random
 import os
 import codecs
 import csv
@@ -38,6 +39,7 @@ begin2_name = 'begin_instr2.txt' # beginning text for second run
 begin_slider_name = 'slider_instr.txt' # beginning text, 
 begin2_slider_name = 'slider_instr2.txt' # beginning text, 
 start_name = 'start_instr.txt' # beginning text for real run
+concept_instr_name = 'concept_instr.txt' # beginning text for real run
 
 ready_name = 'wait_trigger.txt' # instruction: wait trigger screen
 exp_end_name = 'taskend_instr.txt' # instruction: wait trigger screen
@@ -47,6 +49,7 @@ trial_setup_path = './parameters/' # path for trial setup
 fixed_ESQ_name = './parameters/fixedQuestions.csv' # experience sampling questions - fixed
 random_ESQ_name = './parameters/fixedQuestions.csv' # experience sampling questions - random (#anqi modified for testing, feb28)
 
+random_Conceptual_name = './parameters/concept_similarity_Q.csv' # experience sampling questions - random (#anqi modified for testing, feb28)
 
 ###################################################
 # Base settings that apply to all environments.
@@ -73,7 +76,8 @@ MRI = {
     'env': 'mri',
      #'window_size': (1920, 1080),
     'window_size': (1440, 900),
-    'input_method': 'keyboard',
+    #'input_method': 'keyboard',
+    'input_method': 'serial',
         }
 
 
@@ -737,7 +741,8 @@ def run_interactive_slider(win, experiment_info, question_text, initial_rating=5
         return -slider_width/2 + proportion * slider_width
 
     # Initialize rating and marker position:
-    rating = initial_rating
+    #rating = initial_rating
+    rating = random.randint(3,7)
     marker.pos = (rating_to_pos(rating), slider_center[1])
 
     # Set up keyboard and mouse:
@@ -790,8 +795,140 @@ def run_interactive_slider(win, experiment_info, question_text, initial_rating=5
         question_stim.draw()
         # Optionally, if you want to show the rating text, draw it here:
         # rating_text.draw()
+        
         for tick in tick_texts:
             tick.draw()
+        win.flip()
+    
+    return rating
+
+
+
+def run_conceptual_slider(win, experiment_info, question_text, left_text, right_text, initial_rating=5, slider_units='norm'):
+    """
+    Displays an interactive slider that updates in real time based on mouse or keyboard input.
+    Uses normalized coordinates so that components appear appropriately sized.
+    """
+    # Slider parameters
+    slider_width = 0.8      # in norm units
+    slider_height = 0.1     # slider background height
+    slider_ticks = list(range(1, 11))  # rating scale from 1 to 10
+    slider_labels = [str(x) for x in slider_ticks]
+    slider_granularity = 1  # step size
+    slider_decimals = 0     # no decimals displayed
+    marker_colour = 'blue'  # marker color
+
+    # Positions for slider components (norm coordinates)
+    slider_center = (0, 0)
+    question_pos = (0, 0.6)
+    text_pos = (0, 0.05)
+    left_text_pos = (-0.3, 0.3)
+    right_text_pos = (0.3, 0.3)
+
+    # Create visual components with explicit units:
+    slider_bg = visual.Rect(win, width=slider_width, height=slider_height, pos=slider_center,
+                            units=slider_units, fillColor='gray', lineColor='gray')
+    slider_bar = visual.Rect(win, width=slider_width, height=0.01, pos=slider_center,
+                             units=slider_units, fillColor='black', lineColor='black')
+    marker = visual.Circle(win, radius=0.02, pos=slider_center,
+                           units=slider_units, fillColor=marker_colour, lineColor=marker_colour)
+    question_stim = visual.TextStim(win, text=question_text, pos=question_pos,
+                                    height=0.1, units=slider_units, color='white')
+    rating_text = visual.TextStim(win, text=str(initial_rating), pos=text_pos,
+                                  height=0.08, units=slider_units, color='white')
+    
+    left_label = visual.TextStim(win, text=left_text, pos=left_text_pos,
+                                    height=0.08, units=slider_units, color='white')
+    
+    right_label = visual.TextStim(win, text=right_text, pos=right_text_pos,
+                                    height=0.08, units=slider_units, color='white')
+    
+    dissimilar_label = visual.TextStim(win, text='Dissimilar', pos=(-0.4,0.1),
+                                    height=0.05, units=slider_units, color='black')
+    
+    similar_label = visual.TextStim(win, text='Similar', pos=(0.4,0.1),
+                                   height=0.05, units=slider_units, color='black')
+    
+    
+    # Create tick labels along the slider:
+    tick_texts = []
+    for i, label in enumerate(slider_labels):
+        x_pos = -slider_width/2 + (i / (len(slider_labels) - 1)) * slider_width
+        tick = visual.TextStim(win, text=label, pos=(x_pos, slider_center[1] - slider_height),
+                               height=0.05, units=slider_units, color='white')
+        tick_texts.append(tick)
+
+    # Mapping function: rating -> x-position
+    min_rating = slider_ticks[0]
+    max_rating = slider_ticks[-1]
+    def rating_to_pos(rating):
+        proportion = (rating - min_rating) / (max_rating - min_rating)
+        return -slider_width/2 + proportion * slider_width
+
+    # Initialize rating and marker position:
+    #rating = initial_rating
+    rating = random.randint(3,7)
+    marker.pos = (rating_to_pos(rating), slider_center[1])
+
+    # Set up keyboard and mouse:
+    kb = keyboard.Keyboard()
+    mouse = event.Mouse(win=win)
+
+    continueRoutine = True
+    while continueRoutine:
+        if experiment_info['Environment'] == 'mri':
+           keys = kb.getKeys(['b', 'y', 'g'], waitRelease=False) # b: right blue, c: right yellow, g: right green
+           for key in keys:
+             if key.name == 'b':
+                rating = max(min_rating, rating - slider_granularity)
+             elif key.name == 'y':
+                rating = min(max_rating, rating + slider_granularity)
+             elif key.name == 'g':
+                continueRoutine = False
+        else: # LAB environment
+            # Check keyboard input:
+            keys = kb.getKeys(['left', 'right', 'return'], waitRelease=False)
+            for key in keys:
+                if key.name == 'left':
+                    rating = max(min_rating, rating - slider_granularity)
+                elif key.name == 'right':
+                    rating = min(max_rating, rating + slider_granularity)
+                elif key.name == 'return':
+                    continueRoutine = False
+
+        # Check for escape key:
+        if 'escape' in event.getKeys(keyList=['escape']):
+            core.quit()
+
+        # Check mouse input: update rating if left-click is pressed within slider_bg
+        if slider_bg.contains(mouse):
+            if mouse.getPressed()[0]:
+                m_pos = mouse.getPos()
+                proportion = (m_pos[0] + slider_width/2) / slider_width
+                new_rating = min_rating + proportion * (max_rating - min_rating)
+                new_rating = round(new_rating / slider_granularity) * slider_granularity
+                rating = int(max(min_rating, min(max_rating, new_rating)))
+
+        # Update marker and text:
+        marker.pos = (rating_to_pos(rating), slider_center[1])
+        rating_text.text = str(rating)
+
+        for tick in tick_texts:
+            tick.draw()
+            
+        # Draw components:
+        slider_bg.draw()
+        slider_bar.draw()
+        marker.draw()
+        question_stim.draw()
+        left_label.draw()
+        right_label.draw()
+        dissimilar_label.draw()
+        similar_label.draw()
+
+        # Optionally, if you want to show the rating text, draw it here:
+        # rating_text.draw()
+        
         win.flip()
     
     return rating

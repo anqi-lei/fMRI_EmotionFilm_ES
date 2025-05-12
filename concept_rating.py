@@ -15,11 +15,11 @@ event.globalKeys.add(key='escape', func=core.quit)
 INFO = {
     'Experiment': 'Emotion-Film Watching',  # compulsory: name of program, used for trial definition in ./parameter/~.csv
     'Subject': '001',  # compulsory
-    'Version': ['REAL','TEST'],  # no counterbalancing the 2 film orders
-    'Run': ['1', '2'], # 2 sets of parameters for 2 runs / participant
+    'Version': ['REAL'],  # no counterbalancing the 2 film orders
+    'Run': ['1'], # 2 sets of parameters for 2 runs / participant
     'Subtask': ['Exp'],  # start the task with block for choice from two colors or letter
-    'Environment': ['lab', 'mri'],  # mri version can be tested on a normal stimuli delivery pc
-    'ESQuestion': ['ES','No ES'], # with or without experience sampling
+    'Environment': ['lab'],  # mri version can be tested on a normal stimuli delivery pc
+    'ESQuestion': ['Concept_Rating'], # with or without experience sampling
     }
 
 # set dictionary for instructions in running each trial
@@ -69,12 +69,6 @@ def run_experiment():
     ##########################################
     experiment_info = subject_info(INFO)
 
-    # MRI related settings
-    if experiment_info['Environment'] in ['mri']:
-        dummy_vol = 0
-        tr = 1.5 # 1.5? CHANGE
-        trigger_code = 't'
-
     ##########################################
     # Setup
     ##########################################
@@ -114,14 +108,8 @@ def run_experiment():
             # Set & display instructions
             ##########################################
             myparse = 0
-            if experiment_info['Run'] == '1' and (trials[trialcount]['Trial_Cond'] == 'begin'):
-                instr_txt = instr_path +  begin_name
-                    
-            elif experiment_info['Run'] == '2':
-                instr_txt = instr_path + begin2_name
-            else:
-                instr_txt = instr_path + start_name
-            
+
+            instr_txt = instr_path + concept_instr_name
             ready_txt = instr_path + ready_name
             
             myparse = 1
@@ -136,30 +124,12 @@ def run_experiment():
             # get a global clock
             timer = core.Clock()
             
-             # 1/2023 - added for mri - log trigger_code before each trial (other than instructions)
-            if experiment_info['Environment'] == 'mri':
-                # the following is used if each trial is to be aligned with TR
-                # Experiment.window.flip()  # clear the window
-                #event.waitKeys(keyList=[trigger_code])
-                #trial_response['mri_tr_time'] = timer.getTime()
-                # the following is used if only need to log each TR
-                mri_start_time = event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
-                mri_start_time = mri_start_time + event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
-                #event.waitKeys(keyList=['g'])
-                
         else:
             # update trial_output with trial-specific info
             for key in trial_output_headers:
                 if key not in list(trial_response.keys()):
                     trial_output[key] = trials[trialcount][key]
-                    
-            if experiment_info['Environment'] == 'mri':
-                if trialcount == 1:
-                    trial_response['mri_tr_time'] = mri_start_time + event.getKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer)
-                else:
-                    trial_response['mri_tr_time'] = event.getKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer)
-            else:
-                trial_response['mri_tr_time'] = 0
+                
 
             trial_response['trialstart_time'] = timer.getTime()
             
@@ -172,20 +142,12 @@ def run_experiment():
                 mypos_x = 0
                 mypos_y = 0
                 mytext_color = trial_parameter['StimTxt_color']
+            
                 
-                        
-                if trial_parameter['Stim_Video_Type'] in trial_stim[stimcount]:
-                    cur_stim = Display_Video(window=Experiment.window, filename=trial_stim[stimcount], 
-                                            size_x=trial_size_x[stimcount], size_y=trial_size_y[stimcount],
-                                            pos_x=mypos_x, pos_y=mypos_y, show_now=Stim_show[stimcount])
-                    if 'escape' in event.getKeys(keyList=['escape']):
-                        break
-                    trial_response['trialend_time'] = cur_stim.show(timer)
-                
-                elif experiment_info['ESQuestion'] == 'ES' and (trials[trialcount]['Stim_Cond'] == 'ESQ'):
+                if experiment_info['ESQuestion'] == 'Concept_Rating' and (trials[trialcount]['Stim_Cond'] == 'ESQ'):
                     # -------------
-                    # Modified ESQ section using interactive slider:
-                    ESQ_txt = instr_path + ESQ_name
+                    # Modified ESQ section into conceptual similarity task 
+                    ESQ_txt = instr_path + ESQ_name # CHANGE instruction
                     ESQ_msg = my_instructions(
                         window=Experiment.window, settings=settings,
                         instruction_txt=ESQ_txt, ready_txt=ready_txt, 
@@ -194,7 +156,7 @@ def run_experiment():
                     #ESQ_msg.show(auto_advance_time = 2)  # Show the ES instructions
                     
                     # Load ES questions from conditions files
-                    random_question, _ = load_conditions_dict(random_ESQ_name)
+                    random_question, _ = load_conditions_dict(random_Conceptual_name) 
                     exp_sample_instance = stimulus_ExpSample(random_question)
                     questions = exp_sample_instance.generate()
 
@@ -206,7 +168,7 @@ def run_experiment():
                     # Loop over each question and get a rating using the interactive slider:
                     for question in questions:
                         #if experiment_info['Environment'] in ['lab']:
-                        rating = run_interactive_slider(Experiment.window,experiment_info, question['Questions'], initial_rating=5)
+                        rating = run_conceptual_slider(Experiment.window,experiment_info, question['Questions'], question['Left'], question['Right'], initial_rating=5)
                        # elif experiment_info['Environment'] in ['mri']:
                         #    rating = run_MRI_slider(Experiment.window, question['Questions'], initial_rating=5)
                         # Create a row for this question:
@@ -252,18 +214,12 @@ def run_experiment():
                         trial_response['stim_1_start_time'] = timer.getTime()
                         
                 mytime = cur_stim.show(timer)
-               
-               # added for mri - log trigger_code before end of trial
-                if experiment_info['Environment'] == 'mri':
-                    trial_response['mri_tr_time'] = trial_response['mri_tr_time'] + event.getKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer)
-                
 
                 if stimcount == (trial_parameter['num_stim']-1):
                     for key in trial_response:
                         trial_output[key] = trial_response[key]
                     write_csv(experiment_info['DataFile'], trial_output_headers, trial_output)
                      
-            
                
 
     ##########################################
@@ -285,4 +241,3 @@ if __name__ == "__main__":
     _thisDir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(_thisDir)
     run_experiment()
-    

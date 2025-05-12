@@ -1,0 +1,16 @@
+Questions,Label,Left,Right
+How similar are they?,Happy-Surprise,Happy,Surprise
+How similar are they?,Happy-Disgust,Happy,Disgust
+How similar are they?,Happy-Sadness,Happy,Sadness
+How similar are they?,Happy-Fear,Happy,Fear
+How similar are they?,Happy-Anger,Happy,Anger
+How similar are they?,Surprise-Disgust,Surprise,Disgust
+How similar are they?,Surprise-Sadness,Surprise,Sadness
+How similar are they?,Surprise-Fear,Surprise,Fear
+How similar are they?,Surprise-Anger,Surprise,Anger
+How similar are they?,Disgust-Sadness,Disgust,Sadness
+How similar are they?,Disgust-Fear,Disgust,Fear
+How similar are they?,Disgust-Anger,Disgust,Anger
+How similar are they?,Sadness-Fear,Sadness,Fear
+How similar are they?,Sadness-Fear,Sadness,Anger
+How similar are they?,Fear-Anger,Fear,Anger

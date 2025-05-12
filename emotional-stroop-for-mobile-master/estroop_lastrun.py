@@ -1,8 +1,8 @@
-#!/usr/bin/env python
+﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2024.2.4),
-    on Sat Apr 26 17:33:00 2025
+    on Mon Apr 28 12:08:15 2025
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -403,21 +403,21 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
     instructions = visual.TextStim(win=win, name='instructions',
         text=' ',
         font='Arial',
-        pos=(0, .2), draggable=False, height=0.06, wrapWidth=1.2, ori=0, 
+        pos=(0, .1), draggable=False, height=0.04, wrapWidth=4, ori=0, 
         color='white', colorSpace='rgb', opacity=1, 
         languageStyle='LTR',
         depth=-2.0);
     rec = visual.Rect(
         win=win, name='rec',
-        width=(0.5, 0.09)[0], height=(0.5, 0.09)[1],
-        ori=0, pos=(0, -.45), draggable=False, anchor='center',
+        width=(0.4, 0.08)[0], height=(0.4, 0.08)[1],
+        ori=0, pos=(0, -.4), draggable=False, anchor='center',
         lineWidth=5,
         colorSpace='rgb', lineColor=[1,1,1], fillColor=[0.2,0.2,.2],
         opacity=1, depth=-3.0, interpolate=True)
     start_button = visual.TextStim(win=win, name='start_button',
         text='Start',
         font='Arial',
-        pos=(0, -.45), draggable=False, height=0.08, wrapWidth=None, ori=0, 
+        pos=(0, -.4), draggable=False, height=0.05, wrapWidth=2.5, ori=0, 
         color='white', colorSpace='rgb', opacity=1, 
         languageStyle='LTR',
         depth=-4.0);
@@ -428,14 +428,14 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
     fixation = visual.TextStim(win=win, name='fixation',
         text='+',
         font='Arial',
-        pos=(0, 0), draggable=False, height=0.15, wrapWidth=None, ori=0, 
+        pos=(0, 0), draggable=False, height=0.15, wrapWidth=1.5, ori=0, 
         color='white', colorSpace='rgb', opacity=1, 
         languageStyle='LTR',
         depth=0.0);
     stroop_text = visual.TextStim(win=win, name='stroop_text',
         text='',
         font='Arial',
-        pos=(0, 0), draggable=False, height=0.15, wrapWidth=None, ori=0, 
+        pos=(0, 0), draggable=False, height=0.1, wrapWidth=2, ori=0, 
         color='white', colorSpace='rgb', opacity=1, 
         languageStyle='LTR',
         depth=-2.0);
@@ -443,28 +443,28 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
     button1 = visual.Polygon(
         win=win, name='button1',
         edges=72, size=buttonSize,
-        ori=0, pos=(-buttonGap, -buttonOffset+buttonGap), draggable=False, anchor='center',
+        ori=0, pos=(-buttonGap, -buttonOffset+buttonGap+0.2), draggable=False, anchor='top-center',
         lineWidth=5,
         colorSpace='rgb', lineColor=[1,1,1], fillColor=colours[0][0],
         opacity=1, depth=-4.0, interpolate=True)
     button2 = visual.Polygon(
         win=win, name='button2',
         edges=72, size=buttonSize,
-        ori=0, pos=(buttonGap, -buttonOffset+buttonGap), draggable=False, anchor='center',
+        ori=0, pos=(buttonGap, -buttonOffset+buttonGap+0.2), draggable=False, anchor='top-center',
         lineWidth=5,
         colorSpace='rgb', lineColor=[1,1,1], fillColor=colours[1][0],
         opacity=1, depth=-5.0, interpolate=True)
     button3 = visual.Polygon(
         win=win, name='button3',
         edges=72, size=buttonSize,
-        ori=0, pos=(-buttonGap, -buttonOffset-buttonGap), draggable=False, anchor='center',
+        ori=0, pos=(-buttonGap, -buttonOffset-buttonGap+0.2), draggable=False, anchor='top-center',
         lineWidth=5,
         colorSpace='rgb', lineColor=[1,1,1], fillColor=colours[2][0],
         opacity=1, depth=-6.0, interpolate=True)
     button4 = visual.Polygon(
         win=win, name='button4',
         edges=72, size=buttonSize,
-        ori=0, pos=(buttonGap, -buttonOffset-buttonGap), draggable=False, anchor='center',
+        ori=0, pos=(buttonGap, -buttonOffset-buttonGap+0.2), draggable=False, anchor='top-center',
         lineWidth=5,
         colorSpace='rgb', lineColor=[1,1,1], fillColor=colours[3][0],
         opacity=1, depth=-7.0, interpolate=True)
@@ -474,35 +474,35 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         win=win,
         name='image', 
         image='default.png', mask=None, anchor='center',
-        ori=0, pos=(0, 0), draggable=False, size=(.3, .3),
+        ori=0, pos=(0, 0), draggable=False, size=(.2, .2),
         color=[1,1,1], colorSpace='rgb', opacity=1.0,
         flipHoriz=False, flipVert=False,
         texRes=128, interpolate=True, depth=0.0)
     button1_2 = visual.Polygon(
         win=win, name='button1_2',
         edges=72, size=buttonSize,
-        ori=0, pos=(-buttonGap, -buttonOffset+buttonGap), draggable=False, anchor='center',
+        ori=0, pos=(-buttonGap, -buttonOffset+buttonGap+0.2), draggable=False, anchor='top-center',
         lineWidth=5,
         colorSpace='rgb', lineColor='white', fillColor=colours[0][0],
         opacity=1, depth=-1.0, interpolate=True)
     button2_2 = visual.Polygon(
         win=win, name='button2_2',
         edges=72, size=buttonSize,
-        ori=0, pos=(buttonGap, -buttonOffset+buttonGap), draggable=False, anchor='center',
+        ori=0, pos=(buttonGap, -buttonOffset+buttonGap+0.2), draggable=False, anchor='top-center',
         lineWidth=5,
         colorSpace='rgb', lineColor='white', fillColor=colours[1][0],
         opacity=1, depth=-2.0, interpolate=True)
     button3_2 = visual.Polygon(
         win=win, name='button3_2',
         edges=72, size=buttonSize,
-        ori=0, pos=(-buttonGap, -buttonOffset-buttonGap), draggable=False, anchor='center',
+        ori=0, pos=(-buttonGap, -buttonOffset-buttonGap+0.2), draggable=False, anchor='top-center',
         lineWidth=5,
         colorSpace='rgb', lineColor='white', fillColor=colours[2][0],
         opacity=1, depth=-3.0, interpolate=True)
     button4_2 = visual.Polygon(
         win=win, name='button4_2',
         edges=72, size=buttonSize,
-        ori=0, pos=(buttonGap, -buttonOffset-buttonGap), draggable=False, anchor='center',
+        ori=0, pos=(buttonGap, -buttonOffset-buttonGap+0.2), draggable=False, anchor='top-center',
         lineWidth=5,
         colorSpace='rgb', lineColor='white', fillColor=colours[3][0],
         opacity=1, depth=-4.0, interpolate=True)
@@ -572,7 +572,7 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
     gotValidClick = False  # until a click is received
     # Run 'Begin Routine' code from code
     mouserec = mouse.getPos()
-    instructions.text='This experiment consists of a Stroop task.\n\nIn this task you will be presented with a series of words.\nEach screen will show a single word, these words will appear in different colours (green, yellow, blue and red).\nYour job is to indicate the colour that the word is printed in as quickly and as accurately as possible. \nClick the button on the screen that corresponds to that colour. \n\nTouch Start if you  understand the instructions and are ready to begin.'
+    instructions.text='This experiment consists of a Stroop task.\n\nIn this task you will be presented with a series of words.\n\nEach screen will show a single word, these words will appear in different colours \n(green, yellow, blue and red).\n\nYour job is to indicate the colour that the word is printed in as quickly and as accurately as possible. \nMove your cursor to the option that corresponds to that colour. \n\n\nTouch Start if you understand the instructions and are ready to begin.'
     
     # store start times for start
     start.tStartRefresh = win.getFutureFlipTime(clock=globalClock)
@@ -606,14 +606,12 @@ def run(expInfo, thisExp, win, globalClock=None, thisSession=None):
         # *mouse* updates
         
         # if mouse is starting this frame...
-        if mouse.status == NOT_STARTED and t >= 0.0-frameTolerance:
+        if mouse.status == NOT_STARTED and t >= 5-frameTolerance:
             # keep track of start time/frame for later
             mouse.frameNStart = frameN  # exact frame index
             mouse.tStart = t  # local t and not account for scr refresh
             mouse.tStartRefresh = tThisFlipGlobal  # on global time
             win.timeOnFlip(mouse, 'tStartRefresh')  # time at next scr refresh
-            # add timestamp to datafile
-            thisExp.addData('mouse.started', t)
             # update status
             mouse.status = STARTED
             mouse.mouseClock.reset()

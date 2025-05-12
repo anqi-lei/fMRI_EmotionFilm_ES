@@ -1,7 +1,4 @@
 Trial_No,Stim_Cond,Trial_Cond,Stim1,Size_x,Size_y
-,INSTR,begin,,,
-S0,MOV,practice,prac.mp4,1920,1080
-ES0,ESQ,esq_practice,,,
 ,INSTR,begin_exp,,,
 S1,POS,movie,OSS_1.mp4,1920,818
 ES1,ESQ,esq_pos,,,
