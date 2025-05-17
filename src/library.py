@@ -308,8 +308,9 @@ class Display_Video(object):
             self.display.play()
             self.display.draw()
             self.window.flip()
-
-        self.window.flip()
+        
+        self.display.stop()
+        #self.window.flip()
         start_trial = clock.getTime()
         
         return start_trial

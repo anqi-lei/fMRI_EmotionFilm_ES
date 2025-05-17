@@ -6,10 +6,10 @@ Please wait! Advancing to instructions...
 
 
 
-Your task is to rate how similar are these two concepts
+Your task is to rate how similar are these two concepts on a scale
 
 
 
 
-1 is very dissimilar, 9 is very similar
+ranging from 1 (very dissimilar) to 9 (very similar)
 

@@ -17,7 +17,7 @@ INFO = {
     'Subject': '001',  # compulsory
     'Version': ['REAL'],  # no counterbalancing the 2 film orders
     'Run': ['1'], # 2 sets of parameters for 2 runs / participant
-    'Subtask': ['Exp'],  # start the task with block for choice from two colors or letter
+    'Subtask': ['Slider'],  # start the task with block for choice from two colors or letter
     'Environment': ['lab'],  # mri version can be tested on a normal stimuli delivery pc
     'ESQuestion': ['Concept_Rating'], # with or without experience sampling
     }
