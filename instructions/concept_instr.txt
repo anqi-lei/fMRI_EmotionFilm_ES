@@ -10,6 +10,10 @@ Your task is to rate how similar are these two concepts on a scale
 
 
 
-
 ranging from 1 (very dissimilar) to 9 (very similar)
 
+
+
+
+
+Press < Return > to continue the task

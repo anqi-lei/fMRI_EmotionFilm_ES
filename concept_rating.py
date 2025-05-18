@@ -124,7 +124,7 @@ def run_experiment():
             # get a global clock
             timer = core.Clock()
             
-        else:
+        elif (trials[trialcount]['Stim_Cond'] == 'ESQ'):
             # update trial_output with trial-specific info
             for key in trial_output_headers:
                 if key not in list(trial_response.keys()):
@@ -163,7 +163,8 @@ def run_experiment():
                     # Create a list to store one row per question response.
                     response_rows = []
                     # Log questionnaire start time:
-                    questionnaire_start = cur_stim.show(timer)
+                    #questionnaire_start = core.Clock()
+                    questionnaire_start = timer.getTime()
                     
                     # Loop over each question and get a rating using the interactive slider:
                     for question in questions:
@@ -185,7 +186,8 @@ def run_experiment():
                         }
                         response_rows.append(row)
                     
-                    questionnaire_end = cur_stim.show(timer)
+                    questionnaire_end = timer.getTime() # modified by anqi
+                    #questionnaire_end = core.Clock()
                     trial_duration = questionnaire_end - questionnaire_start
                     # Update each row with the end time and duration:
                     for row in response_rows:
@@ -213,7 +215,7 @@ def run_experiment():
                     if stimcount == 0:
                         trial_response['stim_1_start_time'] = timer.getTime()
                         
-                mytime = cur_stim.show(timer)
+                #mytime = cur_stim.show(timer)
 
                 if stimcount == (trial_parameter['num_stim']-1):
                     for key in trial_response:
