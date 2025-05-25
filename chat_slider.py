@@ -5,9 +5,10 @@ Created on Mon March 3 - pilot run (modified to use an interactive slider)
 import os
 import sys
 import random
-from psychopy import core, event, logging, visual, data
+from psychopy import core, event, logging, visual, data, sound
+from psychopy.sound import microphone
 from src.library import *
-
+import time
 
 # bind ESC to quitting immediately
 event.globalKeys.add(key='escape', func=core.quit)
@@ -17,10 +18,10 @@ INFO = {
     'Experiment': 'Emotion-Film Watching',  # compulsory: name of program, used for trial definition in ./parameter/~.csv
     'Subject': '001',  # compulsory
     'Version': ['REAL','TEST'],  # no counterbalancing the 2 film orders
-    'Run': ['1'], # 2 sets of parameters for 2 runs / participant
-    'Subtask': ['Slider'],  # start the task with block for choice from two colors or letter
+    'Run': ['1','2'], # 2 sets of parameters for 2 runs / participant
+    'Subtask': ['SliderVerbal'],  # start the task with block for choice from two colors or letter
     'Environment': ['lab'],  # mri version can be tested on a normal stimuli delivery pc
-    'ESQuestion': ['No ES'], # with or without experience sampling
+    'ESQuestion': ['ES', 'no ES'], # with or without experience sampling
     }
 
 # set dictionary for instructions in running each trial
@@ -165,14 +166,14 @@ def run_experiment():
             # Set & display instructions
             ##########################################
             myparse = 0
-            if (trials[trialcount]['Trial_Cond'] == 'begin'):
+            if (trials[trialcount]['Trial_Cond'] == 'begin_exp'):
                 instr_txt = instr_path +  begin_slider_name
                     
             elif (trials[trialcount]['Trial_Cond'] == 'begin2'):
                 instr_txt = instr_path + begin2_slider_name
             
-            elif (trials[trialcount]['Trial_Cond'] == 'begin_real'):
-                instr_txt = instr_path + start_name
+            elif (trials[trialcount]['Trial_Cond'] == 'begin3'):
+                instr_txt = instr_path + begin3_slider_name
             
             ready_txt = instr_path + ready_name
             
@@ -185,17 +186,7 @@ def run_experiment():
             
             instructions_run.show()
             timer = core.Clock()
-            
-             # 1/2023 - added for mri - log trigger_code before each trial (other than instructions)
-            if experiment_info['Environment'] == 'mri':
-                # the following is used if each trial is to be aligned with TR
-                # Experiment.window.flip()  # clear the window
-                #event.waitKeys(keyList=[trigger_code])
-                #trial_response['mri_tr_time'] = timer.getTime()
-                # the following is used if only need to log each TR
-                mri_start_time = event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
-                mri_start_time = mri_start_time + event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
-                event.waitKeys(keyList=['g'])
+
                 
         else:
             # update trial_output with trial-specific info
@@ -203,14 +194,6 @@ def run_experiment():
                 if key not in list(trial_response.keys()):
                     trial_output[key] = trials[trialcount][key]
                     
-            if experiment_info['Environment'] == 'mri':
-                if trialcount == 1:
-                    trial_response['mri_tr_time'] = mri_start_time + event.getKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer)
-                else:
-                    trial_response['mri_tr_time'] = event.getKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer)
-            else:
-                trial_response['mri_tr_time'] = 0
-
             trial_response['trialstart_time'] = timer.getTime()
             
             trial_stim = [trials[trialcount]['Stim1']]
@@ -246,46 +229,46 @@ def run_experiment():
                     )
 
                 
-                elif experiment_info['ESQuestion'] == 'ES' and (trials[trialcount]['Stim_Cond'] == 'ESQ'):
+                elif experiment_info['ESQuestion'] == 'ES' and (trials[trialcount]['Stim_Cond'] == 'VERBAL'):
                     # -------------
                     # Modified ESQ section using interactive slider:
-                    ESQ_txt = instr_path + ESQ_name
+                    ESQ_txt = instr_path + Verbal_ESQ_name
                     ESQ_msg = my_instructions(
                         window=Experiment.window, settings=settings,
                         instruction_txt=ESQ_txt, ready_txt=ready_txt, 
                         instruction_size=instruction_parameter['inst_size'], instruction_font=instruction_parameter['inst_font'],
                         instruction_color=instruction_parameter['inst_color'], parseflag=0)
-                    #ESQ_msg.show(auto_advance_time = 2)  # Show the ES instructions
-                    
-                    # Load ES questions from conditions files
-                    random_question, _ = load_conditions_dict(random_ESQ_name)
-                    exp_sample_instance = stimulus_ExpSample(random_question)
-                    questions = exp_sample_instance.generate()
 
-                    # Create a list to store one row per question response.
-                    response_rows = []
-                    # Log questionnaire start time:
-                    questionnaire_start = cur_stim.show(timer)
+                  #  Generate a filename for the audio file
+                    audio_filename = f"{experiment_info['Subject']}_ESQ_{trials[trialcount]['Trial_Cond']}.wav"
+                    file_path = os.path.join('recordings', audio_filename)
                     
-                    # Loop over each question and get a rating using the interactive slider:
-                    for question in questions:
-                        #if experiment_info['Environment'] in ['lab']:
-                        rating = run_interactive_slider(Experiment.window,experiment_info, question['Questions'], initial_rating=5)
-                       # elif experiment_info['Environment'] in ['mri']:
-                        #    rating = run_MRI_slider(Experiment.window, question['Questions'], initial_rating=5)
-                        # Create a row for this question:
-                        row = {
-                            'Participant_number': experiment_info['Subject'],
-                            'Questionnaire_startTime': questionnaire_start,
-                            'Questionnaire_endTime': None,  # will update later
-                            'TrialDuration': None,          # will update later
-                            'question label': question['Label'],
-                            'rating value': rating,
-                            'Stim_Cond': trials[trialcount].get('Stim_Cond', ''),
-                            'Trial_Cond': trials[trialcount].get('Trial_Cond', ''),
-                            'Trial_No': trials[trialcount].get('Trial_No', ''),
-                        }
-                        response_rows.append(row)
+                    # Record voice for a fixed duration (e.g., 5 seconds)
+                    mic= microphone.Microphone()
+                    print("Recording started...")
+                    #mic_onset=mic.start()
+                    mic.start()
+                    
+                    response_rows = []
+                    questionnaire_start = cur_stim.show(timer)
+                    done = False
+                    while not done:
+                        ESQ_msg.show()  # Show the ES instructions
+                        keys = event.waitKeys(keyList=['return'])  # Wait for return key press
+                        if 'return' in keys:
+                            done = True
+                   
+                    Experiment.window.flip()
+                    mic.stop()
+                    print("Recording stopped...")
+                    #Experiment.window.flip()
+                    #mic.stop()
+                    #print("Recording stopped...")
+
+                    audioClip=mic.getRecording()
+                    audioClip.save(audio_filename)
+                    
+                     # INSERT A PART WHERE PARTICIPANTS' SPEECH IS RECORDED, AND A BUTTON PRESS INDICATES THE END OF IT
                     
                     questionnaire_end = cur_stim.show(timer)
                     trial_duration = questionnaire_end - questionnaire_start

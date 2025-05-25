@@ -38,12 +38,14 @@ begin_name = 'begin_instr.txt' # beginning text,
 begin2_name = 'begin_instr2.txt' # beginning text for second run
 begin_slider_name = 'slider_instr.txt' # beginning text, 
 begin2_slider_name = 'slider_instr2.txt' # beginning text, 
+begin3_slider_name = 'slider_instr3.txt' # beginning text, 
 start_name = 'start_instr.txt' # beginning text for real run
 concept_instr_name = 'concept_instr.txt' # beginning text for real run
 
 ready_name = 'wait_trigger.txt' # instruction: wait trigger screen
 exp_end_name = 'taskend_instr.txt' # instruction: wait trigger screen
 ESQ_name = 'ESQ_instr.txt'
+Verbal_ESQ_name = 'Verbal_ESQ_instr.txt'
 end_name = 'end_instr.txt'
 trial_setup_path = './parameters/' # path for trial setup
 fixed_ESQ_name = './parameters/fixedQuestions.csv' # experience sampling questions - fixed
