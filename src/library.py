@@ -573,9 +573,9 @@ class stimulus_ExpSample(object):
     def __init__(self, features):
         '''split questions into two sets'''
         self.q_focus = features[0:1]  # the focus question stays at the top
-        self.q_others = features[1:17]
-        self.q_emotion = features[17:21]
-        self.q_arousal = features[22:]
+        self.q_others = features[1:18]
+        self.q_emotion = features[18:23]
+        self.q_arousal = features[23:]
 
     def generate(self):
         '''yield self.stimuli'''
