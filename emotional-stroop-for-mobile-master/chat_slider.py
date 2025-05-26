@@ -201,9 +201,9 @@ def run_experiment():
                 
                         
                 if trial_parameter['Stim_Video_Type'] in trial_stim[stimcount]:
-                    cur_stim = Display_Video2(window=Experiment.window, filename=trial_stim[stimcount], 
+                    cur_stim = Display_Video(window=Experiment.window, filename=trial_stim[stimcount], 
                                             size_x=trial_size_x[stimcount], size_y=trial_size_y[stimcount],
-                                            pos_x=mypos_x, pos_y=mypos_y, show_now=0, noAudio = False)
+                                            pos_x=mypos_x, pos_y=mypos_y, show_now=1)
                     duration = cur_stim.display.duration
                     rating_samples = run_continuous_rating(Experiment.window, cur_stim.display, timer, 
                         {
@@ -237,10 +237,10 @@ def run_experiment():
                     file_path = os.path.join('recordings', audio_filename)
                     
                     # Record voice for a fixed duration (e.g., 5 seconds)
-                    mic= microphone.Microphone()
+                    #mic= microphone.Microphone()
                     #print("Recording started...")
                     
-                    mic_onset=mic.start()
+                    #mic_onset=mic.start()
                     #mic.poll()
                     response_rows = []
                     questionnaire_start = cur_stim.show(timer)
@@ -259,14 +259,14 @@ def run_experiment():
                                core.quit()
                    
                     Experiment.window.flip()
-                    mic.stop()
+                    #mic.stop()
                     #print("Recording stopped...")
                     #Experiment.window.flip()
                     #mic.stop()
                     #print("Recording stopped...")
 
-                    audioClip=mic.getRecording()
-                    audioClip.save(audio_filename)
+                    #audioClip=mic.getRecording()
+                    #audioClip.save(audio_filename)
                     
                      # INSERT A PART WHERE PARTICIPANTS' SPEECH IS RECORDED, AND A BUTTON PRESS INDICATES THE END OF IT
                     
