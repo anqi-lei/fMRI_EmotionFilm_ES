@@ -234,7 +234,7 @@ def run_experiment():
         instruction_size=instruction_parameter['inst_size'], instruction_font=instruction_parameter['inst_font'],
         instruction_color=instruction_parameter['inst_color'], parseflag=0)
     
-    exp_end_msg.show()
+    #exp_end_msg.show()
     logging.flush()
     read_only(experiment_info['DataFile'])
     read_only(experiment_info['LogFile'])
