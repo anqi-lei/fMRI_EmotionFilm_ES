@@ -102,8 +102,8 @@ def run_experiment():
     # hide mouse cursor
     event.Mouse(visible=False)
     
-    # get a global clock (anqi movied the position of clock - April)
-    #timer = core.Clock()
+    # get a global clock (anqi moviedt the position of clock - April)
+   # timer = core.Clock()
 
     ##########################################
     # Running the experiment
@@ -133,6 +133,9 @@ def run_experiment():
             
             instructions_run.show()
             
+            if experiment_info['Environment'] == 'mri':
+                instructions_run.waitTrigger(trigger_code)
+                my_parse=0
             # get a global clock
             timer = core.Clock()
             
@@ -145,7 +148,7 @@ def run_experiment():
                 # the following is used if only need to log each TR
                 mri_start_time = event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
                 mri_start_time = mri_start_time + event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
-                #event.waitKeys(keyList=['g'])
+                #yevent.waitKeys(keyList=['t'])
                 
         else:
             # update trial_output with trial-specific info
