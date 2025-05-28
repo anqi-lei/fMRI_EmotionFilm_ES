@@ -1,0 +1,2 @@
+Trial_No,Stim_Cond,Trial_Cond,Stim1,Size_x,Size_y,mri_tr_time,stim_1_start_time,trialstart_time,trialend_time,resp_key,response
+S0,MOV,practice,prac.mp4,1920,1080,"[['t', 0.2878928999998607], ['t', 0.5119551999960095]]",0,0.5121058999939123,16.017970400003833,,999
