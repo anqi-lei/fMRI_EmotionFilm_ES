@@ -19,7 +19,7 @@ import csv
 import re
 import stat
 from collections import OrderedDict
-from psychopy.hardware import keyboard 
+#from psychopy.hardware import keyboard 
 # 01/2013 added for monitor TR in mri
 from psychopy.iohub.client import launchHubServer
 
@@ -749,20 +749,32 @@ def run_interactive_slider(win, experiment_info, question_text, initial_rating=5
     marker.pos = (rating_to_pos(rating), slider_center[1])
 
     # Set up keyboard and mouse:
-    kb = keyboard.Keyboard()
+    #kb = keyboard.Keyboard()
     mouse = event.Mouse(win=win)
 
     continueRoutine = True
     while continueRoutine:
         if experiment_info['Environment'] == 'mri':
-           keys = kb.getKeys(['b', 'y', 'g'], waitRelease=False) # b: right blue, c: right yellow, g: right green
-           for key in keys:
-             if key.name == 'b':
-                rating = max(min_rating, rating - slider_granularity)
-             elif key.name == 'y':
-                rating = min(max_rating, rating + slider_granularity)
-             elif key.name == 'g':
-                continueRoutine = False
+            # 0527 added
+            keys = event.getKeys(keyList=['b', 'y', 'g'])
+            for key in keys:
+                if 'b' in keys:
+                    rating = max(min_rating, rating - slider_granularity)
+
+                elif 'y' in keys:
+                    rating = min(max_rating, rating + slider_granularity)
+            
+                elif 'g' in keys:
+                    continueRoutine = False
+            
+           #keys = kb.getKeys(['b', 'y', 'g'], waitRelease=False) # b: right blue, c: right yellow, g: right green
+          #for key in keys:
+           #  if key.name == 'b':
+           #     rating = max(min_rating, rating - slider_granularity)
+           #  elif key.name == 'y':
+           #     rating = min(max_rating, rating + slider_granularity)
+           #  elif key.name == 'g':
+            #    continueRoutine = False
         else: # LAB environment
             # Check keyboard input:
             keys = kb.getKeys(['left', 'right', 'return'], waitRelease=False)
