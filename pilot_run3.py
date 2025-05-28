@@ -7,9 +7,7 @@ import sys
 import random
 from psychopy import core, event, logging, visual, data
 from src.library import *
-
-# bind ESC to quitting immediately
-event.globalKeys.add(key='escape', func=core.quit)
+import serial
 
 # get input for dictionary defining the environment & trials to run
 INFO = {
@@ -47,6 +45,7 @@ trial_parameter = dict([
 # set the response set for each trial
 trial_response = dict([
         ('mri_tr_time', 0),  # mri - time sync with TR time before trial
+        ('stim_1_start_time', 0), # stimulus start time
         ('trialstart_time', 0),  # trial start time
         ('trialend_time', 0),  # trial end time
         ('resp_key', None), # response key
@@ -102,8 +101,8 @@ def run_experiment():
     # hide mouse cursor
     event.Mouse(visible=False)
     
-    # get a global clock (anqi moviedt the position of clock - April)
-   # timer = core.Clock()
+    # get a global clock (anqi movied the position of clock here - April)
+    #timer = core.Clock()
 
     ##########################################
     # Running the experiment
@@ -133,6 +132,7 @@ def run_experiment():
             
             instructions_run.show()
             
+                # wait trigger if this this in MRI environment (checked inside the function)
             if experiment_info['Environment'] == 'mri':
                 instructions_run.waitTrigger(trigger_code)
                 my_parse=0
@@ -148,7 +148,7 @@ def run_experiment():
                 # the following is used if only need to log each TR
                 mri_start_time = event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
                 mri_start_time = mri_start_time + event.waitKeys(keyList=[trigger_code], modifiers=False, timeStamped=timer, clearEvents=True)
-                #yevent.waitKeys(keyList=['t'])
+                #event.waitKeys(keyList=['g'])
                 
         else:
             # update trial_output with trial-specific info
@@ -279,7 +279,7 @@ def run_experiment():
         instruction_size=instruction_parameter['inst_size'], instruction_font=instruction_parameter['inst_font'],
         instruction_color=instruction_parameter['inst_color'], parseflag=0)
     
-    exp_end_msg.show()
+    #exp_end_msg.show()
     logging.flush()
     read_only(experiment_info['DataFile'])
     read_only(experiment_info['LogFile'])
@@ -288,4 +288,5 @@ if __name__ == "__main__":
     _thisDir = os.path.dirname(os.path.abspath(__file__))
     os.chdir(_thisDir)
     run_experiment()
+    
     
