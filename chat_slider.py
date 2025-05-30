@@ -63,10 +63,7 @@ Stim_show = dict([
         (0, 0), # stim1
         ])
 
-
-from psychopy import core, event, visual
-
-def run_continuous_rating(window, movie, timer, slider_params):
+def run_continuous_rating(window, timer, slider_params, size_x, size_y, pos_x, pos_y, filename, initial_rating = 5.5):
     """
     Play a MovieStim instance and collect continuous slider ratings simultaneously.
     Args:
@@ -86,22 +83,25 @@ def run_continuous_rating(window, movie, timer, slider_params):
         style='rating', units='norm',
         pos=slider_params.get('pos', (0, -0.8)),
         size=slider_params.get('size', (1.5, 0.1)),
-        color=slider_params.get('color', 'LightGray')
+        color=slider_params.get('color', 'LightGray'),
+        labelHeight=slider_params.get('labelHeight', 0.05)  # [NEW PARAMETER]
     )
     
     # **NEW**: initialize the marker in the center
     ticks = slider.ticks
     mid   = (ticks[0] + ticks[-1]) / 2.0
-    slider.markerPos = mid
+    slider.markerPos = initial_rating
 
     samples = []
     start_time = timer.getTime()
-
-    # Start video playback
-    movie.play()
-    while not movie.isFinished:
+    
+    movie = Display_Video(window=window, filename=filename, size_x = size_x, size_y = size_y, pos_x = pos_x, pos_y = pos_y,
+                                             show_now=1)
+                                            
+    while not movie.display.isFinished:
         # Draw video frame
-        movie.draw()
+        movie.display.play()
+        movie.display.draw()
         # Draw slider overlay
         slider.draw()
         # Flip both
@@ -114,7 +114,7 @@ def run_continuous_rating(window, movie, timer, slider_params):
         if 'escape' in event.getKeys():
             core.quit()
     # Stop video
-    movie.pause()
+    movie.display.stop()
     return samples
 
 def run_experiment():
@@ -123,12 +123,6 @@ def run_experiment():
     # collect participant info
     ##########################################
     experiment_info = subject_info(INFO)
-
-    # MRI related settings
-    if experiment_info['Environment'] in ['mri']:
-        dummy_vol = 0
-        tr = 2 # 1.5? CHANGE
-        trigger_code = 't'
 
     ##########################################
     # Setup
@@ -160,6 +154,12 @@ def run_experiment():
     ##########################################
     # Running the experiment
     ##########################################
+    # Track last slider positions for grouped videos
+    last_rating_by_group = {
+       'PRAC': 5.5,
+       'OSS': 5.5,
+       'SR': 5.5
+      }
     for trialcount in range(len(trials)):
         if (trials[trialcount]['Stim_Cond'] == 'INSTR'): # anqi modified, Apr.15
             ##########################################
@@ -205,23 +205,41 @@ def run_experiment():
                 mypos_x = 0
                 mypos_y = 0
                 mytext_color = trial_parameter['StimTxt_color']
+                size_x=trial_size_x[stimcount]
+                size_y=trial_size_y[stimcount]
+            
+                filename = trial_stim[stimcount]
+                group_key = None
+                if 'PRAC' in filename.upper():
+                    group_key = 'PRAC'
+                elif 'OSS' in filename.upper():
+                    group_key = 'OSS'
+                elif 'SR' in filename.upper():
+                    group_key = 'SR'
+
+                initial_rating = last_rating_by_group.get(group_key, 5.5)
                 
-                        
                 if trial_parameter['Stim_Video_Type'] in trial_stim[stimcount]:
-                    cur_stim = Display_Video(window=Experiment.window, filename=trial_stim[stimcount], 
-                                            size_x=trial_size_x[stimcount], size_y=trial_size_y[stimcount],
-                                            pos_x=mypos_x, pos_y=mypos_y, show_now=Stim_show[stimcount])
-                    duration = cur_stim.display.duration
-                    rating_samples = run_continuous_rating(Experiment.window, cur_stim.display, timer, 
-                        {
+                    #cur_stim = Display_Video(window=Experiment.window, filename=trial_stim[stimcount], 
+                    #                        size_x=trial_size_x[stimcount], size_y=trial_size_y[stimcount],
+                     #                       pos_xmypos_x, pos_y=mypos_y, show_now=1)
+                   # duration = cur_stim.display.duration
+                    rating_samples = run_continuous_rating(Experiment.window, timer, {
                             'ticks': list(range(1, 11)),
-                            'labels': [str(x) for x in range(1, 11)],
+                            #'labels': [str(x) for x in range(1, 11)],
+                            'labels': ['Very  Negative', '', '', '','','Neutral ','','','','','Very    Positive '],
                             'granularity': 0.1,
-                            'pos': (0, -0.4),
+                            'pos': (0, -0.6),
                             'size': (1.7, 0.2),
-                            'color': 'white'
-                        }
+                            'color': 'white',
+                            'labelHeight': 0.072  # ← increase this for larger label text
+                        }, size_x = size_x, size_y = size_y, pos_x = mypos_x, pos_y = mypos_y,
+                        filename = filename, initial_rating = initial_rating
                     )
+                    # Update last rating for this group
+                    if rating_samples and group_key:
+                        last_rating_by_group[group_key] = rating_samples[-1]['rating']
+                   
                     write_csv_rows(
                         experiment_info['DataFile'].replace('.csv','_valence.csv'),
                         ['trial','time','rating'],
@@ -239,47 +257,32 @@ def run_experiment():
                         instruction_size=instruction_parameter['inst_size'], instruction_font=instruction_parameter['inst_font'],
                         instruction_color=instruction_parameter['inst_color'], parseflag=0)
 
-                  #  Generate a filename for the audio file
-                    audio_filename = f"{experiment_info['Subject']}_ESQ_{trials[trialcount]['Trial_Cond']}.wav"
-                    file_path = os.path.join('recordings', audio_filename)
-                    
-                    # Record voice for a fixed duration (e.g., 5 seconds)
-                    mic= microphone.Microphone()
-                    print("Recording started...")
-                    #mic_onset=mic.start()
-                    mic.start()
-                    
                     response_rows = []
-                    questionnaire_start = cur_stim.show(timer)
-                    done = False
-                    while not done:
-                        ESQ_msg.show()  # Show the ES instructions
-                        keys = event.waitKeys(keyList=['return'])  # Wait for return key press
-                        if 'return' in keys:
-                            done = True
-                   
-                    Experiment.window.flip()
-                    mic.stop()
-                    print("Recording stopped...")
-                    #Experiment.window.flip()
-                    #mic.stop()
-                    #print("Recording stopped...")
+                    
+                    ESQ_msg.show() 
+                    # Record voice for a fixed duration (e.g., 5 seconds)
 
-                    audioClip=mic.getRecording()
-                    audioClip.save(audio_filename)
                     
-                     # INSERT A PART WHERE PARTICIPANTS' SPEECH IS RECORDED, AND A BUTTON PRESS INDICATES THE END OF IT
-                    
-                    questionnaire_end = cur_stim.show(timer)
-                    trial_duration = questionnaire_end - questionnaire_start
+                   # questionnaire_start = cur_stim.show(timer)
+
+                        
+                    keys = event.getKeys(keyList=['return', 'escape'])
+                    for key in keys:
+                        if key in  'return':
+                            Experiment.window.flip()
+                        elif key in 'escape':
+                            core.quit()
+
+                   # questionnaire_end = cur_stim.show(timer)
+                 #   trial_duration = questionnaire_end - questionnaire_start
                     # Update each row with the end time and duration:
-                    for row in response_rows:
-                        row['Questionnaire_endTime'] = questionnaire_end
-                        row['TrialDuration'] = trial_duration
+                 #   for row in response_rows:
+                  #      row['Questionnaire_endTime'] = questionnaire_end
+                   #     row['TrialDuration'] = trial_duration
                     
                     # Define the header order for the CSV file:
-                    fieldnames = ['Participant_number', 'Questionnaire_startTime', 'Questionnaire_endTime', 
-                                  'TrialDuration', 'question label', 'rating value', 'Trial_No', 'Stim_Cond', 'Trial_Cond']
+                    fieldnames = ['Participant_number',
+                                   'question label', 'rating value', 'Trial_No', 'Stim_Cond', 'Trial_Cond']
                     filename = experiment_info['DataFile'].replace('.csv', 'endQs.csv')
                     write_csv_rows(filename, fieldnames, response_rows)
                     # -------------
@@ -298,7 +301,7 @@ def run_experiment():
                     if stimcount == 0:
                         trial_response['stim_1_start_time'] = timer.getTime()
                         
-                mytime = cur_stim.show(timer)
+                    #mytime = cur_stim.show(timer)
                
                # added for mri - log trigger_code before end of trial
                 if experiment_info['Environment'] == 'mri':
